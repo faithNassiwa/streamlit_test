@@ -1,16 +1,22 @@
-# This is a sample Python script.
-
-# Press ⇧F10 to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+import streamlit as st
+import time
+import numpy as np
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+st.write("Streamlit version = {}".format(st.__version__))
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+progress_bar = st.sidebar.progress(0)
+status_text = st.sidebar.empty()
+
+last_rows = np.random.randn(1,1)
+chart = st.line_chart(last_rows)
+
+for i in range(1, 101):
+    new_rows = last_rows[-1, :] + np.random.rand(5,1).cumsum(axis=0)
+    status_text.text("%i%% complete" %i)
+    progress_bar.progress(i)
+    chart.add_rows(new_rows)
+    last_rows = new_rows
+    time.sleep(0.1)
+progress_bar.empty()
+st.button('Re run')
